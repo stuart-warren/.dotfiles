@@ -27,6 +27,7 @@ Plug 'vimwiki/vimwiki'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'edkolev/tmuxline.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()

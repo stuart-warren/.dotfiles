@@ -16,7 +16,8 @@ git -C "${OHMYZSH_DIR}" submodule sync --quiet --recursive
 git submodule update --init --recursive "${OHMYZSH_DIR}"
 
 rm -rf ~/.oh-my-zsh
-yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 xargs brew install <${BASEDIR}/packages/homebrew
@@ -25,4 +26,4 @@ xargs brew install <${BASEDIR}/packages/homebrew
 
 curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-nvim -u "$HOME/.config/nvim/plugins.vim" +'PlugInstall --sync' +UpdateRemotePlugins +qa
+tmux new-session -s setup-tmux 'nvim -u "$HOME/.config/nvim/plugins.vim" +"PlugInstall --sync" +"UpdateRemotePlugins" +"Tmuxline airline" +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
