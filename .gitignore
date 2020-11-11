@@ -1,3 +1,4 @@
 .netrc
 .env
 .DS_Store
+.vscode

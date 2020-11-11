@@ -25,7 +25,13 @@ xargs brew install <${BASEDIR}/packages/homebrew
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
+curl -fLo "${HOME}/Library/fonts/MesloLGS NF Regular.ttf" --create-dirs https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+curl -fLo "${HOME}/Library/fonts/MesloLGS NF Bold.ttf" --create-dirs https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+curl -fLo "${HOME}/Library/fonts/MesloLGS NF Italic.ttf" --create-dirs https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+curl -fLo "${HOME}/Library/fonts/MesloLGS NF Bold Italic.ttf" --create-dirs https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+
 curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 tmux new-session -s setup-tmux 'nvim -u "$HOME/.config/nvim/plugins.vim" +"PlugInstall --sync" +"UpdateRemotePlugins" +"Tmuxline airline" +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
 pyenv install --skip-existing 3.9.0
+pyenv global 3.9.0

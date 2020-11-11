@@ -158,6 +158,10 @@ fpath=($(brew --prefix)/share/zsh-completions $fpath)
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
+if which pyenv-virtualenv-init > /dev/null; then 
+  eval "$(pyenv virtualenv-init -)"
+fi
+alias mkvenv="pyenv virtualenv"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -212,6 +216,6 @@ alias todo='gitlab issue create 30298 >/dev/null'
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$GITROOT
 export VIRTUAL_ENV_DISABLE_PROMPT=0
-export VIRTUALENVWRAPPER_PYTHON=$HOME/.pyenv/shims/python3
+# export VIRTUALENVWRAPPER_PYTHON=$HOME/.pyenv/shims/python3
 export PANDA_USERNAME="stuart.warren"
-[[ -f /usr/local/bin/virtualenvwrapper.sh ]] && source /usr/local/bin/virtualenvwrapper.sh
+# [[ -f /usr/local/bin/virtualenvwrapper.sh ]] && source /usr/local/bin/virtualenvwrapper.sh

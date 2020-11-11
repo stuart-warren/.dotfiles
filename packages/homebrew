@@ -19,6 +19,7 @@ neovim
 openssh
 pinentry
 pyenv
+pyenv-virtualenv
 readline
 shellcheck
 snapcraft
