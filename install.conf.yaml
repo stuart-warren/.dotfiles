@@ -1,0 +1,25 @@
+- defaults:
+    link:
+      create: true
+      force: true
+      relink: true
+
+- clean: ['~']
+
+- link:
+    # alacritty
+    ~/.config/alacritty/alacritty.yml: .config/alacritty/alacritty.yml
+    # karabiner
+    ~/.config/karabiner/karabiner.json: .config/karabiner/karabiner.json
+    # nvim
+    ~/.config/nvim: .config/nvim
+    ~/.config/flake8: .config/flake8
+    # git
+    ~/.gitmessage.template: .gitmessage.template
+    ~/.gitconfig.template: .gitconfig.template
+    # shell
+    ~/.zshrc: .zshrc
+    ~/.oh-my-zsh/custom: .oh-my-zsh/custom
+    ~/.p10k.zsh: .p10k.zsh
+    ~/.fzf.zsh: .fzf.zsh
+ 

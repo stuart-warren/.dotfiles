@@ -1,0 +1,23 @@
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+[user]
+	name = stuart.warren
+	email = stuart.warren@ocado.com
+[commit]
+	template = ~/.gitmessage
+[push]
+	default = simple
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore
+	attributesfile = ~/.gitattributes
+[status]
+	submoduleSummary = true
+[diff]
+	submodule = log
+[filter "lfs"]
+	smudge = git-lfs smudge %f
+	required = true
+	clean = git-lfs clean %f
+[pull]
+	ff = only
