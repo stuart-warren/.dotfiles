@@ -15,8 +15,10 @@
     ~/.config/nvim: .config/nvim
     ~/.config/flake8: .config/flake8
     # git
-    ~/.gitmessage.template: .gitmessage.template
-    ~/.gitconfig.template: .gitconfig.template
+    ~/.gitmessage: .gitmessage
+    ~/.gitconfig: .gitconfig
+    ~/.gitignore: .gitignore
+    ~/.gitattributes: .gitattributes
     # shell
     ~/.zshrc: .zshrc
     ~/.oh-my-zsh/custom: .oh-my-zsh/custom
