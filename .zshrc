@@ -83,18 +83,20 @@ export GITROOT="$HOME/src"
 mkdir -p "${GITROOT}"
 export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT}/gitlab.tech.lastmile.com/kubernetes/overview-docs/files/kubeconfig:${HOME}/.kube/panda-agent-config"
 
+export BREW_PREFIX="$(brew --prefix)"
+
 path=(
-  "$(brew --prefix coreutils)/libexec/gnubin"
-  "$(brew --prefix curl)/bin"
-  "$(brew --prefix findutils)/libexec/gnubin"
-  "$(brew --prefix gnu-getopt)/bin"
-  "$(brew --prefix gnu-sed)/libexec/gnubin"
-  "$(brew --prefix gnu-tar)/libexec/gnubin"
-  "$(brew --prefix grep)/libexec/gnubin"
-  "$(brew --prefix ncurses)/bin"
-  "$(brew --prefix openssl@1.1)/bin"
-  "$(brew --prefix sqlite)/bin"
-  "$(brew --prefix unzip)/bin"
+  "${BREW_PREFIX}/opt/coreutils/libexec/gnubin"
+  "${BREW_PREFIX}/opt/curl/bin"
+  "${BREW_PREFIX}/opt/findutils/libexec/gnubin"
+  "${BREW_PREFIX}/opt/gnu-getopt/bin"
+  "${BREW_PREFIX}/opt/gnu-sed/libexec/gnubin"
+  "${BREW_PREFIX}/opt/gnu-tar/libexec/gnubin"
+  "${BREW_PREFIX}/opt/grep/libexec/gnubin"
+  "${BREW_PREFIX}/opt/ncurses/bin"
+  "${BREW_PREFIX}/opt/openssl@1.1/bin"
+  "${BREW_PREFIX}/opt/sqlite/bin"
+  "${BREW_PREFIX}/opt/unzip/bin"
   "$GOPATH/bin"
   "$HOME/bin"
   "${HOME}/.local/bin"
@@ -148,9 +150,9 @@ fi
 export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
 
 if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+  FPATH=${BREW_PREFIX}/share/zsh/site-functions:$FPATH
 fi
-fpath=($(brew --prefix)/share/zsh-completions $fpath)
+fpath=(${BREW_PREFIX}/share/zsh-completions $fpath)
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
