@@ -186,6 +186,7 @@ clone() {
     d="${d%'.git'}"
     d="${d//://}"
     git clone "${repo}" "${GITROOT}/${d}"
+    pushd "${GITROOT}/${d}"
 }
 
 notepad() {
