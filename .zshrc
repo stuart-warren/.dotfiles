@@ -203,18 +203,21 @@ alias dotfiles="${HOME}/.dotfiles/install"
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-  fd --hidden --follow --exclude ".git"  --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1"
+  fd --hidden --follow --exclude ".pyenv" --exclude ".git"  --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1"
 }
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type d --hidden --follow --exclude ".git" --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1" "$HOME"
+  fd --type d --hidden --follow --exclude ".pyenv" --exclude ".git" --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1" "$HOME"
 }
 
 alias fd='fd --exclude vendor --exclude node_modules --exclude Library --exclude site-packages --exclude "pkg" --exclude "go/pkg"'
 
-alias backlog-create='gitlab issue create 10210 >/dev/null'
-alias todo='gitlab issue create 30298 >/dev/null'
+# alias backlog-create='gitlab issue create 10210 >/dev/null'
+# alias todo='gitlab issue create 30298 >/dev/null'
+
+alias pywatch="reflex -d none -R '^.mypy_cache/' -r '\.py$' --"
+alias gowatch="reflex -d none -r '\.go$' --"
 
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$GITROOT

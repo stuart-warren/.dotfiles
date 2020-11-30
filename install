@@ -23,6 +23,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/t
 
 xargs brew install <${BASEDIR}/packages/homebrew
 xargs brew cask install <${BASEDIR}/packages/homebrew-cask
+GO111MODULE=on xargs go get -u -v <${BASEDIR}/packages/go
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
