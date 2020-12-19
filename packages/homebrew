@@ -6,6 +6,7 @@ fd
 findutils
 fzf
 git
+git-lfs
 gnu-getopt
 gnu-sed
 gnu-tar
@@ -14,6 +15,8 @@ gnutls
 go
 grep
 jq
+mkcert
+moreutils
 ncdu
 neovim
 openssh

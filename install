@@ -15,20 +15,20 @@ git submodule update --init --recursive "${DOTBOT_DIR}"
 git -C "${OHMYZSH_DIR}" submodule sync --quiet --recursive
 git submodule update --init --recursive "${OHMYZSH_DIR}"
 
-rm -rf $HOME/.oh-my-zsh
+# rm -rf $HOME/.oh-my-zsh
 rm -rf $HOME/.zshrc.pre-oh-my-zsh* 
 
 which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+[[ -d "$HOME/.oh-my-zsh" ]] || bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-xargs brew install <${BASEDIR}/packages/homebrew
-xargs brew cask install <${BASEDIR}/packages/homebrew-cask
+xargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || xargs -r brew install <${BASEDIR}/packages/homebrew
+xargs -r brew install --cask -v < <(comm -23 ${BASEDIR}/packages/homebrew-cask <(brew list --cask -1))
 GO111MODULE=on xargs go get -u -v <${BASEDIR}/packages/go
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-tmux new-session -s setup-tmux 'nvim -u "$HOME/.config/nvim/plugins.vim" +"PlugInstall --sync" +"UpdateRemotePlugins" +"Tmuxline airline" +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
+tmux new-session -d -s setup-tmux 'nvim -u "$HOME/.config/nvim/plugins.vim" +"PlugInstall --sync" +"UpdateRemotePlugins" +"Tmuxline airline" +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
 pyenv install --skip-existing 3.8.5
 pyenv global 3.8.5

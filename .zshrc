@@ -81,7 +81,7 @@ plugins=(
 export GOPATH="$HOME"
 export GITROOT="$HOME/src"
 mkdir -p "${GITROOT}"
-export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT}/gitlab.tech.lastmile.com/kubernetes/overview-docs/files/kubeconfig:${HOME}/.kube/panda-agent-config"
+export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT}/gitlab.ocado.tech/kubernetes/overview-docs/files/kubeconfig:${HOME}/.kube/panda-agent-config"
 
 export BREW_PREFIX="$(brew --prefix)"
 
@@ -216,7 +216,7 @@ alias fd='fd --exclude vendor --exclude node_modules --exclude Library --exclude
 # alias backlog-create='gitlab issue create 10210 >/dev/null'
 # alias todo='gitlab issue create 30298 >/dev/null'
 
-alias pywatch="reflex -d none -R '^.mypy_cache/' -r '\.py$' --"
+alias pywatch="reflex -d none -R '^.mypy_cache/' -R '^.pytest_cache/' -r '\.py$' --"
 alias gowatch="reflex -d none -r '\.go$' --"
 
 export WORKON_HOME=$HOME/.virtualenvs
