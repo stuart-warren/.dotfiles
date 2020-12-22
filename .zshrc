@@ -1,6 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="nvim"
@@ -85,6 +87,13 @@ export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT
 
 export BREW_PREFIX="$(brew --prefix)"
 
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$GITROOT
+export VIRTUAL_ENV_DISABLE_PROMPT=0
+# export VIRTUALENVWRAPPER_PYTHON=$HOME/.pyenv/shims/python3
+export PANDA_USERNAME="stuart.warren"
+# [[ -f /usr/local/bin/virtualenvwrapper.sh ]] && source /usr/local/bin/virtualenvwrapper.sh
+
 path=(
   "${BREW_PREFIX}/opt/coreutils/libexec/gnubin"
   "${BREW_PREFIX}/opt/curl/bin"
@@ -114,7 +123,7 @@ alias get="k get"
 alias delete="k delete"
 alias logs="k logs"
 
-[[ -f $HOME/.k8sh_extensions ]] && source $HOME/.k8sh_extensions
+[[ -e $HOME/.k8sh_extensions ]] && source $HOME/.k8sh_extensions
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -154,18 +163,20 @@ if type brew &>/dev/null; then
 fi
 fpath=(${BREW_PREFIX}/share/zsh-completions $fpath)
 
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/stuart-warren/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -e $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
-if which pyenv-virtualenv-init > /dev/null; then 
+if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)"
 fi
 alias mkvenv="pyenv virtualenv"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -e $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
 
 # source openstack-deploy config file for user with openstack-cli
 source-config() {
@@ -218,10 +229,3 @@ alias fd='fd --exclude vendor --exclude node_modules --exclude Library --exclude
 
 alias pywatch="reflex -d none -R '^.mypy_cache/' -R '^.pytest_cache/' -r '\.py$' --"
 alias gowatch="reflex -d none -r '\.go$' --"
-
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$GITROOT
-export VIRTUAL_ENV_DISABLE_PROMPT=0
-# export VIRTUALENVWRAPPER_PYTHON=$HOME/.pyenv/shims/python3
-export PANDA_USERNAME="stuart.warren"
-# [[ -f /usr/local/bin/virtualenvwrapper.sh ]] && source /usr/local/bin/virtualenvwrapper.sh
