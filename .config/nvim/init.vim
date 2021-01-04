@@ -21,6 +21,7 @@ set clipboard+=unnamedplus
 set relativenumber
 set number
 set mouse=a
+set keymodel=startsel,stopsel
 
 " No backups
 set nobackup
@@ -72,12 +73,11 @@ let g:LanguageClient_rootMarkers = {
     \ 'go': ['go.mod'],
     \ }
 
-" Figure out the system Python for Neovim.
-if exists("$VIRTUAL_ENV")
-    let g:python3_host_prog=substitute(system("which -a python3 | grep 'env' | head -n1"), "\n", '', 'g')
-else
-    let g:python3_host_prog=substitute(system("which python3"), "\n", '', 'g')
-endif
+" pyenv virtualenv 3.8.6 neovim3
+" pyenv activate neovim3
+" pip install neovim
+" pyenv which python
+let g:python3_host_prog="$HOME/.pyenv/versions/neovim3/bin/python"
 
 " Sends default register to terminal TTY using OSC 52 escape sequence
 " https://github.com/leeren/dotfiles

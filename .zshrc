@@ -5,6 +5,7 @@ set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export LANG="en_GB.UTF-8"
 export EDITOR="nvim"
 alias vim="nvim"
 alias vi="nvim"
