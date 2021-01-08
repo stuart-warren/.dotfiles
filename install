@@ -24,11 +24,10 @@ which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubuserconte
 xargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || xargs -r brew install <${BASEDIR}/packages/homebrew
 xargs -r brew install --cask -v < <(comm -23 ${BASEDIR}/packages/homebrew-cask <(brew list --cask -1))
 GO111MODULE=on xargs go get -u -v <${BASEDIR}/packages/go
+xargs -r cargo install <${BASEDIR}/packages/cargo
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
-curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-tmux new-session -d -s setup-tmux 'nvim -u "$HOME/.config/nvim/plugins.vim" +"PlugInstall --sync" +"UpdateRemotePlugins" +"Tmuxline airline" +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
+tmux new-session -d -s setup-tmux 'nvim +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
 pyenv install --skip-existing 3.8.5
 pyenv global 3.8.5

@@ -110,6 +110,7 @@ path=(
   "$GOPATH/bin"
   "$HOME/bin"
   "${HOME}/.local/bin"
+  "${HOME}/.cargo/bin"
   "${GITROOT}/gitlab.ocado.tech/kamil.kafara/k8s-utils"
   $path
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
@@ -207,6 +208,18 @@ notepad() {
   $EDITOR $pad
 }
 alias np="notepad"
+
+google() {
+  # uses https://github.com/mgdm/htmlq
+  query=${@}
+  v=""
+  if [[ "$1" == "-v" ]]; then v="-v"; fi
+  curl ${v} -LG --data-urlencode "q=${query}" \
+           --data-urlencode "sourceid=chrome" \
+           -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" \
+           https://google.com/search -s | htmlq div.g a -a href | grep -vE '^#|^/|googleusercontent' | sort -u
+}
+alias stackoverflow="google site:stackoverflow.com"
 
 alias dotfiles="${HOME}/.dotfiles/install"
 

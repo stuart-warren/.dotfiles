@@ -1,15 +1,71 @@
+let need_to_install_plugins = 0
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+    silent !curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    let need_to_install_plugins = 1
+endif
+
 function! SourceIfExists(file)
   if filereadable(expand(a:file))
     exe 'source' a:file
   endif
 endfunction
 
-call SourceIfExists("$HOME/.config/nvim/plugins.vim")
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
+
+" Declare the list of plugins.
+Plug 'tpope/vim-sensible'
+Plug 'Vigemus/nvimux', { 'branch': 'master' }
+Plug 'kassio/neoterm'
+Plug 'janko/vim-test'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'airblade/vim-gitgutter'
+Plug 'scrooloose/syntastic'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'vim-airline/vim-airline', { 'tag': '*' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+Plug 'markstory/vim-zoomwin'
+" Asynchronous Lint Engine
+Plug 'dense-analysis/ale'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'vimwiki/vimwiki'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'edkolev/tmuxline.vim'
+Plug 'preservim/tagbar'
+
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+
+if need_to_install_plugins == 1
+    echo "Installing plugins..."
+    silent! PlugInstall --sync
+    silent! UpdateRemotePlugins
+    echo "Done!"
+    q
+endif
+
+if empty(glob('~/.vim/plugged/tmuxline.vim/tmux.conf')) && !empty($TMUX_PANE)
+    echo "Setting up tmuxline"
+    silent! Tmuxline airline
+    silent! TmuxlineSnapshot "$HOME/.vim/plugged/tmuxline.vim/tmux.conf"
+    echo "Done!"
+endif
 
 let mapleader = ","
 
-filetype plugin on
+filetype plugin indent on
 set ttyfast
+set termguicolors
 set hidden
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab
@@ -22,6 +78,7 @@ set relativenumber
 set number
 set mouse=a
 set keymodel=startsel,stopsel
+set updatetime=500
 
 " No backups
 set nobackup
@@ -40,6 +97,9 @@ set wildignore+=*.pyc,*.pyo,*/__pycache__/*
 set wildignore+=*.swp,~*
 " Archives
 set wildignore+=*.zip,*.tar,*.gz
+" code folding
+set foldmethod=indent
+set foldlevel=99
 " Setup netrw
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
@@ -60,6 +120,15 @@ nnoremap <C-s> <esc>:w<CR>
 inoremap <C-s> <esc>:w<CR>a
 vnoremap <C-s> <Esc>:w<CR>
 
+" copy, cut and paste
+vmap <C-c> "+y
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <ESC>"+pa
+
+" tags
+map <leader>t :TagbarToggle<CR>
+
 let g:LanguageClient_serverCommands = {
     \ 'python': ['pyls'],
     \ 'sh': ['bash-language-server', 'start'],
@@ -72,6 +141,9 @@ let g:LanguageClient_rootMarkers = {
     \ 'typescript': ['tsconfig.json'],
     \ 'go': ['go.mod'],
     \ }
+let g:LanguageClient_hoverPreview = "Auto"
+let g:LanguageClient_useFloatingHover = 1
+nmap <silent>K <Plug>(lcn-hover)
 
 " pyenv virtualenv 3.8.6 neovim3
 " pyenv activate neovim3
@@ -160,7 +232,7 @@ let g:ale_linters = {
 \}
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
-
+let g:ale_hover_to_preview = 1
 let g:go_fmt_command = "goimports"    " Run goimports along gofmt on each save
 let g:go_auto_type_info = 1           " Automatically get signature/type info for object under cursor
 
@@ -221,5 +293,29 @@ iab <expr> dts strftime('%Y-%m-%d')
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsEditSplit="vertical"
+
+" disable autoindent when pasting text
+" source: https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+    return a:s
+  endif
+
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 call SourceIfExists("$HOME/.vimrc.local")
