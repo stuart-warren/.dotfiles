@@ -1,5 +1,6 @@
 bash
 bash-completion@2
+browsh-org/browsh/browsh
 coreutils
 ctags-exuberant
 curl
