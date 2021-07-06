@@ -7,11 +7,13 @@ set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
 export ZSH="$HOME/.oh-my-zsh"
 export LANG="en_GB.UTF-8"
 export EDITOR="nvim"
+export AWS_PAGER=""
 alias vim="nvim"
 alias vi="nvim"
 alias watch='watch '
-alias wiki='$EDITOR ~/Google\ Drive\ File\ Stream/My\ Drive/Wiki/index.md'
-
+alias wiki='$EDITOR ~/Google\ Drive/My\ Drive/Wiki/index.md'
+alias gC='nvim +"call dotoo#capture#capture()"'
+alias glcurl='curl --header "Authorization: Bearer ${GITLAB_TOKEN}"'
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -79,6 +81,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(
     git
     dotenv
+    sudo
 )
 
 export GOPATH="$HOME"
@@ -118,6 +121,7 @@ path=(
 )
 
 source $ZSH/oh-my-zsh.sh
+# source /usr/local/opt/asdf/asdf.sh
 
 alias k="kubectl"
 alias describe="k describe"
@@ -158,7 +162,8 @@ if [ ! -e "${HOME}/.gnupg/S.gpg-agent.ssh" ]; then
     echo "Starting gpg-agent daemon"
     eval $(gpg-agent --daemon)
 fi
-export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+gpgconf --launch gpg-agent
 
 if type brew &>/dev/null; then
   FPATH=${BREW_PREFIX}/share/zsh/site-functions:$FPATH
@@ -176,7 +181,11 @@ fi
 if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)"
 fi
-alias mkvenv="pyenv virtualenv"
+
+mkvenv() {
+  pyenv virtualenv $@
+  pyenv local $@
+}
 
 [[ -e $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
 
@@ -219,21 +228,35 @@ google() {
            -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" \
            https://google.com/search -s | htmlq div.g a -a href | grep -vE '^#|^/|googleusercontent' | sort -u
 }
+
+asdfsetup () {
+    tool="${1}"
+    version="${2-latest}"
+    asdf plugin add ${tool}
+    asdf install ${tool} ${version}
+    asdf global ${tool} ${2-$(asdf latest ${tool})}
+}
+
 alias stackoverflow="google site:stackoverflow.com"
 
 alias dotfiles="${HOME}/.dotfiles/install"
+
+gotestcover () {
+    package=${1-"."}
+    go test --coverprofile coverage.txt ${package} && gocover-cobertura < coverage.txt > coverage.xml
+}
 
 # Use fd (https://github.com/sharkdp/fd) instead of the default find
 # command for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-  fd --hidden --follow --exclude ".pyenv" --exclude ".git"  --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1"
+  fd --hidden --follow --exclude ".local" --exclude ".pyenv" --exclude ".git"  --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1"
 }
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type d --hidden --follow --exclude ".pyenv" --exclude ".git" --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1" "$HOME"
+  fd --type d --hidden --follow --exclude ".local" --exclude ".pyenv" --exclude ".git" --exclude ".virtualenvs" --exclude "vendor" --exclude "node_modules" --exclude "Library" --exclude "pkg" --exclude "go/pkg" . "$1" "$HOME"
 }
 
 alias fd='fd --exclude vendor --exclude node_modules --exclude Library --exclude site-packages --exclude "pkg" --exclude "go/pkg"'

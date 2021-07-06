@@ -15,41 +15,60 @@ endfunction
 call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
+Plug 'tomasr/molokai'
+let g:molokai_original = 1
+let g:rehash256 = 1
 Plug 'tpope/vim-sensible'
 Plug 'Vigemus/nvimux', { 'branch': 'master' }
 Plug 'kassio/neoterm'
 Plug 'janko/vim-test'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-speeddating', { 'for': [ 'org', 'dotoo', 'rec', 'md' ] }
 Plug 'airblade/vim-gitgutter'
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'vim-airline/vim-airline', { 'tag': '*' }
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" Plug 'vim-airline/vim-airline', { 'tag': '*' }
+"Plug 'autozimu/LanguageClient-neovim', {
+"    \ 'branch': 'next',
+"    \ 'do': 'bash install.sh',
+"    \ }
 Plug 'markstory/vim-zoomwin'
 " Asynchronous Lint Engine
-Plug 'dense-analysis/ale'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'dense-analysis/ale'
+"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'vimwiki/vimwiki'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'edkolev/tmuxline.vim'
 Plug 'preservim/tagbar'
+Plug 'dhruvasagar/vim-dotoo'
+
+" test plugins from https://blog.inkdrop.info/how-to-set-up-neovim-0-5-modern-plugins-lsp-treesitter-etc-542c3d9c9887
+Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-lua/completion-nvim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'hoob3rt/lualine.nvim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+colorscheme molokai
 
 if need_to_install_plugins == 1
     echo "Installing plugins..."
     silent! PlugInstall --sync
     silent! UpdateRemotePlugins
+    source $MYVIMRC
     echo "Done!"
     q
 endif
@@ -66,16 +85,21 @@ let mapleader = ","
 filetype plugin indent on
 set ttyfast
 set termguicolors
+set guicursor=
 set hidden
+" autocmd FileType dooto,dotooagenda setlocal nohidden
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
-set clipboard=unnamed
-set clipboard+=unnamedplus
+set clipboard^=unnamed,unnamedplus
 set relativenumber
 set number
+set signcolumn=yes
+set colorcolumn=80
+set noerrorbells
+set nohlsearch
 set mouse=a
 set keymodel=startsel,stopsel
 set updatetime=500
@@ -85,6 +109,9 @@ set nobackup
 set nowritebackup
 set nowb
 set noswapfile
+set undodir=~/.vim/undodir
+set undofile
+set scrolloff=8
 " give us nice EOL (end of line) characters
 set list
 set listchars=tab:▸\ ,eol:¬
@@ -287,6 +314,27 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown'
 
 map <leader>md :MarkdownPreview<CR>
 au FileType markdown setl shell=bash\ -i
+autocmd BufNewFile,BufRead *.org setf dotoo
+autocmd BufNewFile,BufRead *.dotoo setf dotoo
+let g:dotoo#agenda#files=["/Volumes/GoogleDrive/My Drive/notes/*.dotoo"]
+let g:dotoo#capture#refile="/Volumes/GoogleDrive/My Drive/notes/refile.dotoo"
+"let g:dotoo#capture#clock = 0
+"let g:dotoo#capture#templates = {
+"                      \ 'd': {
+"                      \   'description': 'Done',
+"                      \   'lines': [
+"                      \     '* DONE %?',
+"                      \     'DEADLINE: [%(strftime(g:dotoo#time#datetime_format))]'
+"                      \   ],
+"                      \  'target': 'index.dotoo:Tasks'
+"                      \ },
+"                      \ 'n': {
+"                      \  'target': 'index.dotoo:Notes'
+"                      \ },
+"                      \ 't': {
+"                      \  'target': 'index.dotoo:Tasks'
+"                      \ }
+"                      \}
 
 iab <expr> dts strftime('%Y-%m-%d')
 
@@ -317,5 +365,238 @@ function! XTermPasteBegin()
 endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+
+lua << EOF
+local nvim_lsp = require('lspconfig')
+local protocol = require'vim.lsp.protocol'
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+
+  if client.resolved_capabilities.document_formatting then
+    vim.api.nvim_command [[augroup Format]]
+    vim.api.nvim_command [[autocmd! * <buffer>]]
+    vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+    vim.api.nvim_command [[augroup END]]
+  end
+
+  require'completion'.on_attach(client, bufnr)
+
+  protocol.CompletionItemKind = {
+    '', -- Text
+    '', -- Method
+    '', -- Function
+    '', -- Constructor
+    '', -- Field
+    '', -- Variable
+    '', -- Class
+    'ﰮ', -- Interface
+    '', -- Module
+    '', -- Property
+    '', -- Unit
+    '', -- Value
+    '', -- Enum
+    '', -- Keyword
+    '﬌', -- Snippet
+    '', -- Color
+    '', -- File
+    '', -- Reference
+    '', -- Folder
+    '', -- EnumMember
+    '', -- Constant
+    '', -- Struct
+    '', -- Event
+    'ﬦ', -- Operator
+    '', -- TypeParameter
+  }
+
+end
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { "pyright", "gopls", "diagnosticls" }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+local saga = require 'lspsaga'
+
+saga.init_lsp_saga {
+  error_sign = '',
+  warn_sign = '',
+  hint_sign = '',
+  infor_sign = '',
+  border_style = "round",
+}
+
+-- icon
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = true,
+    -- This sets the spacing and the prefix, obviously.
+    virtual_text = {
+      spacing = 4,
+      prefix = ''
+    }
+  }
+)
+
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+  indent = {
+    enable = false,
+    disable = {},
+  },
+  ensure_installed = {
+    "tsx",
+    "toml",
+    "json",
+    "yaml",
+    "html",
+    "scss",
+    "python",
+    "go"
+  },
+}
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      n = {
+        ["q"] = actions.close
+      },
+    },
+  }
+}
+
+local status, lualine = pcall(require, "lualine")
+if (not status) then return end
+lualine.setup {
+  options = {
+    icons_enabled = true,
+    theme = 'solarized_dark',
+    section_separators = {'', ''},
+    component_separators = {'', ''},
+    disabled_filetypes = {}
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch'},
+    lualine_c = {'filename'},
+    lualine_x = {
+      { 'diagnostics', sources = {"nvim_lsp"}, symbols = {error = ' ', warn = ' ', info = ' ', hint = ' '} },
+      'encoding',
+      'filetype'
+    },
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {'fugitive'}
+}
+
+
+EOF
+
+" show hover doc
+nnoremap <silent>K :Lspsaga hover_doc<CR>
+inoremap <silent> <C-k> <Cmd>Lspsaga signature_help<CR>
+nnoremap <silent> gh <Cmd>Lspsaga lsp_finder<CR>
+nnoremap <silent> <C-j> :Lspsaga diagnostic_jump_next<CR>
+
+set completeopt=menuone,noinsert,noselect
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+nnoremap <silent> ;f <cmd>Telescope find_files<cr>
+nnoremap <silent> ;r <cmd>Telescope live_grep<cr>
+nnoremap <silent> \\ <cmd>Telescope buffers<cr>
+nnoremap <silent> ;; <cmd>Telescope help_tags<cr>
+
+function MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    " select the highlighting
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSep#ÓÇ∞'
+    elseif i + 2 == tabpagenr()
+      let s .= '%#TabLineSep2#ÓÇ∞'
+    else
+      let s .= 'ÓÇ±'
+    endif
+  endfor
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+    let s .= '%=%#TabLine#%999X'
+  endif
+  return s
+endfunction
+function MyTabLabel(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let name = bufname(buflist[winnr - 1])
+  let label = fnamemodify(name, ':t')
+  return len(label) == 0 ? '[No Name]' : label
+endfunction
+set tabline=%!MyTabLine()
 
 call SourceIfExists("$HOME/.vimrc.local")

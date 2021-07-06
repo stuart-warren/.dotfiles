@@ -4,3 +4,6 @@
 .vscode
 .vagrant
 .netrwhist
+.devcontainer.json
+*.code-workspace
+
