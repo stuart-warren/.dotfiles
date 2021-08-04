@@ -13,7 +13,24 @@ alias vi="nvim"
 alias watch='watch '
 alias wiki='$EDITOR ~/Google\ Drive/My\ Drive/Wiki/index.md'
 alias gC='nvim +"call dotoo#capture#capture()"'
+alias gA='nvim +"call dotoo#agenda#agenda()"'
 alias glcurl='curl --header "Authorization: Bearer ${GITLAB_TOKEN}"'
+alias find-host="${HOME}/.pyenv/versions/warehouse_site/bin/python ${HOME}/src/gitlab.ocado.tech/platform-engineering-puppet/ocadotechnology-warehouse_site/find-host"
+alias find-man-server="find-host -d -r man -f -n"
+ssh-man-server() {
+    ssh $(find-man-server $1 | fzf -0 )
+}
+ssh-edge-device() {
+    server="$( find-man-server $1 | fzf -0 )"
+    domain="$( echo ${server} | rev | cut -d '.' -f1-6 | rev )"
+    out=$( ssh ${server} "dig AXFR ${domain} @localhost" )
+    device=$( grep -E "^osp[0-9]+|^bk[0-9]+" <<< ${out} | grep -v TXT | awk '{print $1}' | rev | cut -c2- | rev | fzf -0 )
+    ssh ocado@${device}
+}
+alias todo="nvim ~/Google\ Drive/My\ Drive/notes/index.dotoo"
+alias pane-id="tmux display -pt "${TMUX_PANE:-"%0"}" '#{pane_index}' 2>/dev/null"
+alias pom="start-pomodoro.sh"
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -118,6 +135,7 @@ path=(
   $path
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
   "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin"
+  "${HOME}/src/gitlab.ocado.tech/yury.beznos/vpn-in-container"
 )
 
 source $ZSH/oh-my-zsh.sh

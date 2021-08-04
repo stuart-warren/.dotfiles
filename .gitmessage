@@ -1,11 +1,14 @@
 
-# <type>(<scope>): <Subject>  Imperative mood    |<
+# <type>(<scope>)[!]: <Subject>  Imperative mood    |<
 # <BLANK LINE>
 # <body>           what and why vs. how                              |<
+# <BLANK_LINE>
+# BREAKING CHANGE: which api is now not backwards compatible
 #
 ## TYPES:
-# feat:     A new feature
-# fix:      A bug fix
+# feat!:    An API breaking feature [major release bump]
+# feat:     A new feature           [minor release bump]
+# fix:      A bug fix               [patch release bump]
 # docs:     Documentation only changes
 # style:    Changes that do not affect the meaning of the code
 #           (white-space, formatting, missing semi-colons, etc)
