@@ -30,6 +30,6 @@ gxargs -r cargo install <${BASEDIR}/packages/cargo
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
-tmux new-session -d -s setup-tmux 'nvim +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
+tmux new-session -d -s setup-tmux 'nvim +Tmuxline +"TmuxlineSnapshot $HOME/.vim/plugged/tmuxline.vim/tmux.conf" +qa'
 pyenv install --skip-existing 3.8.5
 pyenv global 3.8.5
