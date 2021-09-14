@@ -1,5 +1,8 @@
 bash
 bash-completion@2
+bottlerocketlabs/apps/gitlab
+bottlerocketlabs/apps/dotfiles
+bottlerocketlabs/apps/localpod
 coreutils
 curl-openssl
 fd
