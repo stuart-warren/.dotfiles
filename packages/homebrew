@@ -1,13 +1,12 @@
 bash
 bash-completion@2
-bottlerocketlabs/apps/gitlab
-bottlerocketlabs/apps/dotfiles
-bottlerocketlabs/apps/localpod
 coreutils
 curl-openssl
+dotfiles
 fd
 fzf
 git
+gitlab
 gnu-getopt
 gnu-sed
 gnu-tar
@@ -15,6 +14,7 @@ gnutls
 go
 grep
 jq
+localpod
 mkcert
 moreutils
 ncdu
@@ -29,7 +29,7 @@ shellcheck
 snapcraft
 socat
 tmux
-universal-ctags/universal-ctags/universal-ctags --HEAD
+universal-ctags --HEAD
 unzip
 watch
 wget
