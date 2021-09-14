@@ -160,10 +160,16 @@ path=(
   "${PYENV_ROOT}/bin"
   "${PYENV_ROOT}/shims"
   "${GITROOT}/gitlab.ocado.tech/kamil.kafara/k8s-utils"
-  $path
+  "/usr/local/bin"
+  "/usr/bin"
+  "/bin"
+  "/usr/sbin"
+  "/sbin"
+  "/usr/local/MacGPG2/bin"
+  "/usr/local/sbin"
+  "/opt/X11/bin"
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
   "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin"
-#  "${HOME}/src/gitlab.ocado.tech/yury.beznos/vpn-in-container"
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -217,7 +223,7 @@ fi
 fpath=(${BREW_PREFIX}/share/zsh-completions $fpath)
 
 # heroku autocomplete setup
-HEROKU_AC_ZSH_SETUP_PATH=/Users/stuart-warren/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+HEROKU_AC_ZSH_SETUP_PATH=${HOME}/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -e $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
