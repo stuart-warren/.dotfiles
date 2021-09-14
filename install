@@ -23,9 +23,9 @@ which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubuserconte
 brew install findutils
 
 gxargs -r brew tap -v < <(comm -23 ${BASEDIR}/packages/homebrew-tap <(brew tap)) || gxargs -r brew tap <${BASEDIR}/packages/homebrew-tap
-gxargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || gxargs -r brew install <${BASEDIR}/packages/homebrew
+gxargs -r brew install --formula -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || gxargs -r brew install --formula <${BASEDIR}/packages/homebrew
 gxargs -r brew install --cask -v < <(comm -23 ${BASEDIR}/packages/homebrew-cask <(brew list --cask -1))
-gGO111MODULE=on gxargs go get -u -v <${BASEDIR}/packages/go
+GO111MODULE=on gxargs go get -u -v <${BASEDIR}/packages/go
 gxargs -r cargo install <${BASEDIR}/packages/cargo
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
