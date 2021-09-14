@@ -15,22 +15,47 @@ alias wiki='$EDITOR ~/Google\ Drive/My\ Drive/Wiki/index.md'
 alias gC='nvim +"call dotoo#capture#capture()"'
 alias gA='nvim +"call dotoo#agenda#agenda()"'
 alias glcurl='curl --header "Authorization: Bearer ${GITLAB_TOKEN}"'
-alias find-host="${HOME}/.pyenv/versions/warehouse_site/bin/python ${HOME}/src/gitlab.ocado.tech/platform-engineering-puppet/ocadotechnology-warehouse_site/find-host"
-alias find-man-server="find-host -d -r man -f -n"
+#alias find-host="${HOME}/.pyenv/versions/warehouse_site/bin/python ${HOME}/src/gitlab.ocado.tech/platform-engineering-puppet/ocadotechnology-warehouse_site/find-host"
+alias find-man-server="find-host management_server"
 ssh-man-server() {
-    ssh $(find-man-server $1 | fzf -0 )
+    ssh $(find-man-server $1)
 }
 ssh-edge-device() {
-    server="$( find-man-server $1 | fzf -0 )"
+    server="$( find-man-server $1 )"
     domain="$( echo ${server} | rev | cut -d '.' -f1-6 | rev )"
     out=$( ssh ${server} "dig AXFR ${domain} @localhost" )
-    device=$( grep -E "^osp[0-9]+|^bk[0-9]+" <<< ${out} | grep -v TXT | awk '{print $1}' | rev | cut -c2- | rev | fzf -0 )
+    device=$( grep -E "^osp[0-9]+|^bk[0-9]+" <<< ${out} | grep -v TXT | awk '{print $1}' | rev | cut -c2- | rev | find-host )
     ssh ocado@${device}
 }
 alias todo="nvim ~/Google\ Drive/My\ Drive/notes/index.dotoo"
 alias pane-id="tmux display -pt "${TMUX_PANE:-"%0"}" '#{pane_index}' 2>/dev/null"
 alias pom="start-pomodoro.sh"
+ip4-for-interface() {
+    ifconfig ${1} | grep 'inet ' | awk '{ print $2 }'
+}
+network-for-interface() {
+    ip4-for-interface ${1} | cut -d. -f1-3
+}
+ping-network() {
+    fping -c1 $(network-for-interface en0).{2..254} 2>&1 | grep -v '100%'
+}
+scan-network() {
+    nmap --dns-servers=192.168.0.1 -sP $(network-for-interface en0).0/24 | grep 'report'
+}
+set-aws-profile() {
+    query=${@}
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+    unset AWS_DEFAULT_REGION
+    export AWS_PROFILE=$(osp-aws-sso select ${query})
+    aws sts get-caller-identity >/dev/null 2>&1 || aws sso login
+}
+set-aws-region() {
+    export AWS_DEFAULT_REGION=$(aws ec2 describe-regions --query "Regions[].{Name:RegionName}" --output text | fzf)
+}
 
+alias sap="set-aws-profile"
+alias sar="set-aws-region"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -96,6 +121,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    aws
     git
     dotenv
     sudo
@@ -107,7 +133,7 @@ mkdir -p "${GITROOT}"
 export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT}/gitlab.ocado.tech/kubernetes/overview-docs/files/kubeconfig:${HOME}/.kube/panda-agent-config"
 
 export BREW_PREFIX="$(brew --prefix)"
-
+export PYENV_ROOT="$HOME/.pyenv"
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$GITROOT
 export VIRTUAL_ENV_DISABLE_PROMPT=0
@@ -131,11 +157,13 @@ path=(
   "$HOME/bin"
   "${HOME}/.local/bin"
   "${HOME}/.cargo/bin"
+  "${PYENV_ROOT}/bin"
+  "${PYENV_ROOT}/shims"
   "${GITROOT}/gitlab.ocado.tech/kamil.kafara/k8s-utils"
   $path
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
   "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin"
-  "${HOME}/src/gitlab.ocado.tech/yury.beznos/vpn-in-container"
+#  "${HOME}/src/gitlab.ocado.tech/yury.beznos/vpn-in-container"
 )
 
 source $ZSH/oh-my-zsh.sh

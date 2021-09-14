@@ -1,14 +1,10 @@
 bash
 bash-completion@2
-browsh-org/browsh/browsh
 coreutils
-ctags-exuberant
 curl-openssl
 fd
-findutils
 fzf
 git
-git-lfs
 gnu-getopt
 gnu-sed
 gnu-tar
@@ -16,7 +12,6 @@ gnupg
 gnutls
 go
 grep
-heroku/brew/heroku
 jq
 mkcert
 moreutils
