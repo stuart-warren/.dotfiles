@@ -20,11 +20,12 @@ rm -rf $HOME/.zshrc.pre-oh-my-zsh*
 
 which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 [[ -d "$HOME/.oh-my-zsh" ]] || bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+brew install findutils
 
-xargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || xargs -r brew install <${BASEDIR}/packages/homebrew
-xargs -r brew install --cask -v < <(comm -23 ${BASEDIR}/packages/homebrew-cask <(brew list --cask -1))
-GO111MODULE=on xargs go get -u -v <${BASEDIR}/packages/go
-xargs -r cargo install <${BASEDIR}/packages/cargo
+gxargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || xargs -r brew install <${BASEDIR}/packages/homebrew
+gxargs -r brew install --cask -v < <(comm -23 ${BASEDIR}/packages/homebrew-cask <(brew list --cask -1))
+gGO111MODULE=on xargs go get -u -v <${BASEDIR}/packages/go
+gxargs -r cargo install <${BASEDIR}/packages/cargo
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
