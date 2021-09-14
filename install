@@ -22,9 +22,9 @@ which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubuserconte
 [[ -d "$HOME/.oh-my-zsh" ]] || bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 brew install findutils
 
-gxargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || xargs -r brew install <${BASEDIR}/packages/homebrew
+gxargs -r brew install -v < <(comm -23 ${BASEDIR}/packages/homebrew <(brew list --formula -1)) || gxargs -r brew install <${BASEDIR}/packages/homebrew
 gxargs -r brew install --cask -v < <(comm -23 ${BASEDIR}/packages/homebrew-cask <(brew list --cask -1))
-gGO111MODULE=on xargs go get -u -v <${BASEDIR}/packages/go
+gGO111MODULE=on gxargs go get -u -v <${BASEDIR}/packages/go
 gxargs -r cargo install <${BASEDIR}/packages/cargo
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
