@@ -53,6 +53,9 @@ set-aws-profile() {
 set-aws-region() {
     export AWS_DEFAULT_REGION=$(aws ec2 describe-regions --query "Regions[].{Name:RegionName}" --output text | fzf)
 }
+barchart() {
+    awk '{ printf $2"\t"; { c=0; do{printf "▇"; c++} while (c<$1); printf "\n"} }' | column -t
+}
 
 alias sap="set-aws-profile"
 alias sar="set-aws-region"

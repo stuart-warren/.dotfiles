@@ -25,3 +25,11 @@
 	ff = only
 [advice]
 	detachedHead = False
+[alias]
+	upstream-name = ! "git remote | egrep -o '(upstream|origin)' | tail -1"
+	default-branch = ! "git remote show $(git upstream-name) | awk '/HEAD branch/ {print $NF}'"
+	files = ! "git diff --name-only $(git merge-base HEAD $(git default-branch))"
+	stat = ! "git diff --stat $(git merge-base HEAD $(git default-branch))"
+	changes = "!_g() { git log --name-only --oneline | sort | uniq -c | sort -n | tail -n 20 \"${@}\"; }; _g"
+	heatmap = "!_a() { awk '{ printf $2\"\t\"; { c=0; do{printf \"▇\"; c++} while (c<$1); printf \"\\n\"} }'; }; git changes \"${@}\" | _a | column -t"
+	review = ! "vim -p $(git files) +\"tabdo Gdiff $(git default-branch)\" +\"let g:gitgutter_diff_base = '$(git default-branch)'\""
