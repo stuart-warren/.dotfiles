@@ -22,6 +22,7 @@ Plug 'tpope/vim-sensible'
 Plug 'Vigemus/nvimux', { 'branch': 'master' }
 Plug 'kassio/neoterm'
 Plug 'janko/vim-test'
+Plug 'oguzbilgic/vim-gdiff'
 " Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 " Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
@@ -544,6 +545,12 @@ lualine.setup {
 
 
 EOF
+
+" Quickfix motions
+nnoremap [q :cprevious<cr>
+nnoremap ]q :cnext<cr>
+nnoremap [Q :cfirst<cr>
+nnoremap ]Q :clast<cr>
 
 " show hover doc
 nnoremap <silent>K :Lspsaga hover_doc<CR>
