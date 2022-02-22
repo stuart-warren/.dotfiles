@@ -6,4 +6,5 @@
 .netrwhist
 .devcontainer.json
 *.code-workspace
-
+.python-version
+data/system.yaml

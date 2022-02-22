@@ -22,7 +22,7 @@ Plug 'tpope/vim-sensible'
 Plug 'Vigemus/nvimux', { 'branch': 'master' }
 Plug 'kassio/neoterm'
 Plug 'janko/vim-test'
-Plug 'oguzbilgic/vim-gdiff'
+"Plug 'oguzbilgic/vim-gdiff'
 " Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 " Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
@@ -577,26 +577,33 @@ function MyTabLine()
     else
       let s .= '%#TabLine#'
     endif
+
     " set the tab page number (for mouse clicks)
     let s .= '%' . (i + 1) . 'T'
+
     " the label is made by MyTabLabel()
     let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+
     if i + 1 == tabpagenr()
-      let s .= '%#TabLineSep#ÓÇ∞'
+      let s .= '%#TabLineSep#'
     elseif i + 2 == tabpagenr()
-      let s .= '%#TabLineSep2#ÓÇ∞'
+      let s .= '%#TabLineSep2#'
     else
-      let s .= 'ÓÇ±'
+      let s .= ''
     endif
   endfor
+
   " after the last tab fill with TabLineFill and reset tab page nr
   let s .= '%#TabLineFill#%T'
+
   " right-align the label to close the current tab page
   if tabpagenr('$') > 1
     let s .= '%=%#TabLine#%999X'
   endif
+
   return s
 endfunction
+
 function MyTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)

@@ -1,13 +1,22 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
 
 # Path to your oh-my-zsh installation.
+export POWERLEVEL9K_INSTANT_PROMPT=off
 export ZSH="$HOME/.oh-my-zsh"
 export LANG="en_GB.UTF-8"
 export EDITOR="nvim"
 export AWS_PAGER=""
+export ZSH_DOTENV_PROMPT=true
 alias vim="nvim"
 alias vi="nvim"
 alias watch='watch '
@@ -15,6 +24,7 @@ alias wiki='$EDITOR ~/Google\ Drive/My\ Drive/Wiki/index.md'
 alias gC='nvim +"call dotoo#capture#capture()"'
 alias gA='nvim +"call dotoo#agenda#agenda()"'
 alias glcurl='curl --header "Authorization: Bearer ${GITLAB_TOKEN}"'
+alias keeper='keeper --config $HOME/.keeper/config.json'
 #alias find-host="${HOME}/.pyenv/versions/warehouse_site/bin/python ${HOME}/src/gitlab.ocado.tech/platform-engineering-puppet/ocadotechnology-warehouse_site/find-host"
 alias find-man-server="find-host management_server"
 ssh-man-server() {
@@ -48,10 +58,12 @@ set-aws-profile() {
     unset AWS_SECRET_ACCESS_KEY
     unset AWS_DEFAULT_REGION
     export AWS_PROFILE=$(osp-aws-sso select ${query})
+    export AWS_DEFAULT_REGION=$(aws configure get region --profile=${AWS_PROFILE})
     aws sts get-caller-identity >/dev/null 2>&1 || aws sso login
 }
 set-aws-region() {
-    export AWS_DEFAULT_REGION=$(aws ec2 describe-regions --query "Regions[].{Name:RegionName}" --output text | fzf)
+    query=${@}
+    export AWS_DEFAULT_REGION=$(osp-aws-sso select-region ${query})
 }
 
 alias sap="set-aws-profile"
@@ -171,7 +183,7 @@ path=(
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
   "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin"
 )
-
+eval "$(rbenv init - zsh)"
 source $ZSH/oh-my-zsh.sh
 # source /usr/local/opt/asdf/asdf.sh
 
@@ -234,6 +246,8 @@ if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
+if ! $(colima status >/dev/null 2>&1); then colima start; fi
+
 mkvenv() {
   pyenv virtualenv $@
   pyenv local $@
@@ -259,8 +273,9 @@ clone() {
     d="${d#'git@'}"
     d="${d%'.git'}"
     d="${d//://}"
-    git clone "${repo}" "${GITROOT}/${d}"
+    git clone "${repo}" "${GITROOT}/${d}" || true
     pushd "${GITROOT}/${d}"
+    git fetch $(git rev-parse --abbrev-ref origin/HEAD | tr '/' ' ')
 }
 
 notepad() {
@@ -318,3 +333,8 @@ alias fd='fd --exclude vendor --exclude node_modules --exclude Library --exclude
 
 alias pywatch="reflex -d none -R '^.mypy_cache/' -R '^.pytest_cache/' -r '\.py$' --"
 alias gowatch="reflex -d none -r '\.go$' --"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
