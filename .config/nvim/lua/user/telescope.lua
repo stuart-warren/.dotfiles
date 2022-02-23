@@ -28,6 +28,8 @@ telescope.setup {
         ["<CR>"] = actions.select_default,
         ["<C-x>"] = actions.select_horizontal,
         ["<C-v>"] = actions.select_vertical,
+        ["<C-_>"] = actions.select_horizontal,
+        ["<C-|>"] = actions.select_vertical,
         ["<C-t>"] = actions.select_tab,
 
         ["<C-u>"] = actions.preview_scrolling_up,
@@ -49,6 +51,8 @@ telescope.setup {
         ["<CR>"] = actions.select_default,
         ["<C-x>"] = actions.select_horizontal,
         ["<C-v>"] = actions.select_vertical,
+        ["_"] = actions.select_horizontal,
+        ["|"] = actions.select_vertical,
         ["<C-t>"] = actions.select_tab,
 
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,

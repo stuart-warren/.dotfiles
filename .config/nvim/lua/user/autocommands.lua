@@ -24,10 +24,18 @@ vim.cmd [[
     autocmd VimResized * tabdo wincmd = 
   augroup end
 
+  if has('nvim')
+    let $GIT_EDITOR = 'nvr -cc split --remote-wait'
+  endif
+
   augroup _terminal
     autocmd!
     autocmd TermOpen * setlocal nonumber
+    autocmd TermOpen * exec "normal! i"
+    autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
   augroup end
+
+
 ]]
 
 -- Autoformat

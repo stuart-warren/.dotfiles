@@ -78,6 +78,25 @@ local opts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
+local tmuxish = {
+  name = "Tabs/TMUXish",
+  ["c"] = { "<cmd>tabnew<cr>", "New Tab" },
+  ["1"] = { "<cmd>normal 1gt<cr>", "Tab 1" },
+  ["2"] = { "<cmd>normal 2gt<cr>", "Tab 2" },
+  ["3"] = { "<cmd>normal 3gt<cr>", "Tab 3" },
+  ["4"] = { "<cmd>normal 4gt<cr>", "Tab 4" },
+  ["5"] = { "<cmd>normal 5gt<cr>", "Tab 5" },
+  ["6"] = { "<cmd>normal 6gt<cr>", "Tab 6" },
+  ["7"] = { "<cmd>normal 7gt<cr>", "Tab 7" },
+  ["8"] = { "<cmd>normal 8gt<cr>", "Tab 8" },
+  ["9"] = { "<cmd>normal 9gt<cr>", "Tab 9" },
+  ["t"] = { "<cmd>terminal<cr>", "Start Terminal" },
+  ["x"] = { "<cmd>q<cr>", "Close Window" },
+  ["|"] = { "<cmd>vsplit<cr>", "Split |" },
+  ["_"] = { "<cmd>split<cr>", "Split -" },
+  [","] = { "<cmd>exec ':LualineRenameTab '.input('Tab name: ')<cr>", "Rename Tab" },
+}
+
 local mappings = {
   ["b"] = {
     "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<cr>",
@@ -95,22 +114,7 @@ local mappings = {
   ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
   ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
 
-  ["a"] = {
-    name = "Tabs/TMUXish",
-    ["c"] = { "<cmd>tabnew<cr>", "New Tab" },
-    ["1"] = { "<cmd>normal 1gt<cr>", "Tab 1" },
-    ["2"] = { "<cmd>normal 2gt<cr>", "Tab 2" },
-    ["3"] = { "<cmd>normal 3gt<cr>", "Tab 3" },
-    ["4"] = { "<cmd>normal 4gt<cr>", "Tab 4" },
-    ["5"] = { "<cmd>normal 5gt<cr>", "Tab 5" },
-    ["6"] = { "<cmd>normal 6gt<cr>", "Tab 6" },
-    ["7"] = { "<cmd>normal 7gt<cr>", "Tab 7" },
-    ["8"] = { "<cmd>normal 8gt<cr>", "Tab 8" },
-    ["9"] = { "<cmd>normal 9gt<cr>", "Tab 9" },
-    ["|"] = { "<cmd>vsplit +terminal<cr>", "Split |" },
-    ["_"] = { "<cmd>split +terminal<cr>", "Split -" },
-    [","] = { "<cmd>exec ':LualineRenameTab '.input('Tab name: ')<cr>", "Rename Tab" },
-  },
+  ["a"] = tmuxish,
 
   p = {
     name = "Packer",
@@ -175,6 +179,8 @@ local mappings = {
       "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
       "Workspace Symbols",
     },
+    t = { "<cmd>lua require'toggle_lsp_diagnostics'.toggle_diagnostics()<cr>", "Toggle Diagnostics" },
+    v = { "<cmd>lua require'toggle_lsp_diagnostics'.toggle_virtual_text()<cr>", "Toggle VirtualText" },
   },
   s = {
     name = "Search",
@@ -196,6 +202,7 @@ local mappings = {
     p = { "<cmd>lua _PYTHON_TOGGLE()<cr>", "Python" },
     f = { "<cmd>ToggleTerm direction=float<cr>", "Float" },
     h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" },
+    s = { "<cmd>terminal<cr>", "Start Terminal" },
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
   },
 
@@ -207,5 +214,10 @@ local mappings = {
   }
 }
 
+local root_mappings = {
+  ["<c-a>"] = tmuxish,
+}
+
 which_key.setup(setup)
 which_key.register(mappings, opts)
+which_key.register(root_mappings, { mode = "n", prefix = ""})
