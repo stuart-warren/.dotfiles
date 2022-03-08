@@ -7,10 +7,15 @@ vim.cmd [[
     autocmd FileType qf set nobuflisted
   augroup end
 
+  if has('nvim')
+    let $GIT_EDITOR = 'nvr -cc split --remote-wait'
+  endif
+
   augroup _git
     autocmd!
     autocmd FileType gitcommit setlocal wrap
     autocmd FileType gitcommit setlocal spell
+    autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
   augroup end
 
   augroup _markdown
@@ -19,20 +24,11 @@ vim.cmd [[
     autocmd FileType markdown setlocal spell
   augroup end
 
-  augroup _auto_resize
-    autocmd!
-    autocmd VimResized * tabdo wincmd = 
-  augroup end
-
-  if has('nvim')
-    let $GIT_EDITOR = 'nvr -cc split --remote-wait'
-  endif
-
   augroup _terminal
     autocmd!
     autocmd TermOpen * setlocal nonumber
     autocmd TermOpen * exec "normal! i"
-    autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+    autocmd BufEnter term://* startinsert
   augroup end
 
 
@@ -42,4 +38,9 @@ vim.cmd [[
 -- augroup _lsp
 --   autocmd!
 --   autocmd BufWritePre * lua vim.lsp.buf.formatting()
+-- augroup end
+
+-- augroup _auto_resize
+--   autocmd!
+--   autocmd VimResized * tabdo wincmd = 
 -- augroup end

@@ -25,6 +25,7 @@ alias gC='nvim +"call dotoo#capture#capture()"'
 alias gA='nvim +"call dotoo#agenda#agenda()"'
 alias glcurl='curl --header "Authorization: Bearer ${GITLAB_TOKEN}"'
 alias keeper='keeper --config $HOME/.keeper/config.json'
+alias notmux='tmux -f ~/.notmux.conf'
 #alias find-host="${HOME}/.pyenv/versions/warehouse_site/bin/python ${HOME}/src/gitlab.ocado.tech/platform-engineering-puppet/ocadotechnology-warehouse_site/find-host"
 alias find-man-server="find-host management_server"
 ssh-man-server() {
@@ -156,6 +157,7 @@ export PANDA_USERNAME="stuart.warren"
 path=(
   "${BREW_PREFIX}/opt/coreutils/libexec/gnubin"
   "${BREW_PREFIX}/opt/curl/bin"
+  "${BREW_PREFIX}/opt/diffutils/bin"
   "${BREW_PREFIX}/opt/findutils/libexec/gnubin"
   "${BREW_PREFIX}/opt/gnu-getopt/bin"
   "${BREW_PREFIX}/opt/gnu-sed/libexec/gnubin"
@@ -246,7 +248,7 @@ if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
-if ! $(colima status >/dev/null 2>&1); then colima start; fi
+# if ! $(colima status >/dev/null 2>&1); then colima start; fi
 
 mkvenv() {
   pyenv virtualenv $@

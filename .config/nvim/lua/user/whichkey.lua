@@ -80,7 +80,11 @@ local opts = {
 
 local tmuxish = {
   name = "Tabs/TMUXish",
-  ["c"] = { "<cmd>tabnew<cr>", "New Tab" },
+  ["c"] = {
+    name = "New Tab",
+    ["f"] = { "<cmd>tabnew | lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>", "New Tab file" },
+    ["t"] = { "<cmd>tabnew | terminal<cr>", "New tab terminal" },
+  },
   ["1"] = { "<cmd>normal 1gt<cr>", "Tab 1" },
   ["2"] = { "<cmd>normal 2gt<cr>", "Tab 2" },
   ["3"] = { "<cmd>normal 3gt<cr>", "Tab 3" },
@@ -92,8 +96,16 @@ local tmuxish = {
   ["9"] = { "<cmd>normal 9gt<cr>", "Tab 9" },
   ["t"] = { "<cmd>terminal<cr>", "Start Terminal" },
   ["x"] = { "<cmd>q<cr>", "Close Window" },
-  ["|"] = { "<cmd>vsplit<cr>", "Split |" },
-  ["_"] = { "<cmd>split<cr>", "Split -" },
+  ["|"] = {
+    name = "Split vertically",
+    ["f"] = { "<cmd>vsplit | lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>", "Split | file" },
+    ["t"] = { "<cmd>vsplit | terminal<cr>", "Split | terminal" },
+  },
+  ["_"] = {
+    name = "Split horizontally",
+    ["f"] = { "<cmd>split | lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>", "Split _ file" },
+    ["t"] = { "<cmd>split | terminal<cr>", "Split _" },
+  },
   [","] = { "<cmd>exec ':LualineRenameTab '.input('Tab name: ')<cr>", "Rename Tab" },
 }
 
