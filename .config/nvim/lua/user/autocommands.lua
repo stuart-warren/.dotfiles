@@ -9,6 +9,8 @@ vim.cmd [[
 
   if has('nvim')
     let $GIT_EDITOR = 'nvr -cc split --remote-wait'
+    let $EDITOR = 'nvr -cc split --remote-wait'
+    let $VISUAL = 'nvr -cc split --remote-wait'
   endif
 
   augroup _git
@@ -26,6 +28,8 @@ vim.cmd [[
 
   augroup _terminal
     autocmd!
+    " autocmd TermOpen * execute "set termwinsize=0x" . (winwidth("%")-6)
+	  " autocmd VimResized * execute "set termwinsize=0x" . (winwidth("%")-6)
     autocmd TermOpen * setlocal nonumber
     autocmd TermOpen * exec "normal! i"
     autocmd BufEnter term://* startinsert

@@ -14,7 +14,7 @@ set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
 export POWERLEVEL9K_INSTANT_PROMPT=off
 export ZSH="$HOME/.oh-my-zsh"
 export LANG="en_GB.UTF-8"
-export EDITOR="nvim"
+export EDITOR="nvr --remote-wait"
 export AWS_PAGER=""
 export ZSH_DOTENV_PROMPT=true
 alias vim="nvim"
