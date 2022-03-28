@@ -1,3 +1,7 @@
+local status_ok, lspcontainers = pcall(require, "lspcontainers")
+if not status_ok then
+	return
+end
 
 local util = require("lspconfig/util")
 local path = util.path
@@ -14,8 +18,7 @@ local function get_python_path()
 end
 
 local opts = {
-    cmd = { "pyright-langserver", "--stdio" },
-    
+    cmd = lspcontainers.command("pyright"),
     filetypes = { "python" },
     settings = {
       python = {

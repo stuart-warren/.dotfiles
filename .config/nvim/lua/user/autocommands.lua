@@ -9,8 +9,6 @@ vim.cmd [[
 
   if has('nvim')
     let $GIT_EDITOR = 'nvr -cc split --remote-wait'
-    let $EDITOR = 'nvr -cc split --remote-wait'
-    let $VISUAL = 'nvr -cc split --remote-wait'
   endif
 
   augroup _git
@@ -35,14 +33,14 @@ vim.cmd [[
     autocmd BufEnter term://* startinsert
   augroup end
 
+  augroup _lsp
+    autocmd!
+    autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync()
+    autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync()
+  augroup end
+
 
 ]]
-
--- Autoformat
--- augroup _lsp
---   autocmd!
---   autocmd BufWritePre * lua vim.lsp.buf.formatting()
--- augroup end
 
 -- augroup _auto_resize
 --   autocmd!

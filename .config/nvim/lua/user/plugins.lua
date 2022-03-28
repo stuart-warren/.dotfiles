@@ -44,22 +44,19 @@ return packer.startup(function(use)
   use "wbthomason/packer.nvim" -- Have packer manage itself
   use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
-  use "numToStr/Comment.nvim" -- Easily comment stuff
   use "kyazdani42/nvim-web-devicons"
-  use "kyazdani42/nvim-tree.lua"
+
+  -- use "kyazdani42/nvim-tree.lua"
   -- use "akinsho/bufferline.nvim"
   -- use "stevearc/barbar.nvim"
-  use { 'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons' }
-  use "moll/vim-bbye"
+  -- use { 'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons' }
+  -- use "moll/vim-bbye"
   use "nvim-lualine/lualine.nvim"
-  use "akinsho/toggleterm.nvim"
-  use "ahmedkhalf/project.nvim"
-  use "lewis6991/impatient.nvim"
+  -- use "akinsho/toggleterm.nvim"
+  -- use "lewis6991/impatient.nvim"
   use "lukas-reineke/indent-blankline.nvim"
   use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
   use "folke/which-key.nvim"
-  use { "ThePrimeagen/harpoon", requires = "nvim-lua/plenary.nvim", }
 
   -- Colorschemes
   -- use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
@@ -80,6 +77,7 @@ return packer.startup(function(use)
 
   -- LSP
   use "neovim/nvim-lspconfig" -- enable LSP
+  use "lspcontainers/lspcontainers.nvim"
   use "williamboman/nvim-lsp-installer" -- simple to use language server installer
   use "tamago324/nlsp-settings.nvim" -- language server settings defined in json for
   use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
@@ -87,6 +85,8 @@ return packer.startup(function(use)
 
   -- Telescope
   use "nvim-telescope/telescope.nvim"
+  use "ahmedkhalf/project.nvim"
+  use { "ThePrimeagen/harpoon", requires = "nvim-lua/plenary.nvim", }
 
   -- Treesitter
   use {
@@ -94,12 +94,14 @@ return packer.startup(function(use)
     run = ":TSUpdate",
   }
   use "JoosepAlviste/nvim-ts-context-commentstring"
+  use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
+  use "numToStr/Comment.nvim" -- Easily comment stuff
 
   -- Git
   use "lewis6991/gitsigns.nvim"
 
-  -- Collab
-  use "jbyuki/instant.nvim"
+  -- -- Collab
+  -- use "jbyuki/instant.nvim"
 
   -- orgmode
   use {
