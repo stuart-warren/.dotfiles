@@ -36,7 +36,7 @@ ssh-edge-device() {
     domain="$( echo ${server} | rev | cut -d '.' -f1-6 | rev )"
     out=$( ssh ${server} "dig AXFR ${domain} @localhost" )
     device=$( grep -E "^osp[0-9]+|^bk[0-9]+" <<< ${out} | grep -v TXT | awk '{print $1}' | rev | cut -c2- | rev | find-host )
-    ssh ocado@${device}
+    ssh -v ocado@${device}
 }
 alias todo="nvim ~/Google\ Drive/My\ Drive/notes/index.dotoo"
 alias pane-id="tmux display -pt "${TMUX_PANE:-"%0"}" '#{pane_index}' 2>/dev/null"
@@ -145,7 +145,7 @@ export GITROOT="$HOME/src"
 mkdir -p "${GITROOT}"
 export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT}/gitlab.ocado.tech/kubernetes/overview-docs/files/kubeconfig:${HOME}/.kube/panda-agent-config"
 
-export BREW_PREFIX="$(brew --prefix)"
+export BREW_PREFIX="$(/usr/local/bin/brew --prefix)"
 export PYENV_ROOT="$HOME/.pyenv"
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$GITROOT
@@ -253,6 +253,7 @@ fi
 mkvenv() {
   pyenv virtualenv $@
   pyenv local $@
+  pyenv pyright
 }
 
 [[ -e $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh

@@ -7,4 +7,5 @@
 .devcontainer.json
 *.code-workspace
 .python-version
+pyrightconfig.json
 data/system.yaml

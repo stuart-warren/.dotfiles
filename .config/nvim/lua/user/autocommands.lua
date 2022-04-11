@@ -35,8 +35,8 @@ vim.cmd [[
 
   augroup _lsp
     autocmd!
-    autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync()
-    autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync()
+    autocmd BufWritePre *.go lua vim.lsp.buf.formatting_seq_sync()
+    autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_seq_sync()
   augroup end
 
 

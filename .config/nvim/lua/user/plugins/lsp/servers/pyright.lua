@@ -17,7 +17,11 @@ local function get_python_path()
   return exepath('python3') or exepath('python') or 'python'
 end
 
+-- use https://github.com/alefpereira/pyenv-pyright with pyenv
 local opts = {
+    before_init = function(params)
+      params.processId = vim.NIL
+    end,
     cmd = lspcontainers.command("pyright"),
     filetypes = { "python" },
     settings = {
@@ -27,8 +31,7 @@ local opts = {
           diagnosticMode = "workspace",
           useLibraryCodeForTypes = true,
         },
-        pythonPath = get_python_path(),
-        venvPath = path.join(vim.env.HOME, ".pyenv", "versions"),
+        typeCheckingMode = "strict",
       },
     },
     single_file_support = true,
