@@ -25,4 +25,4 @@
     ~/.oh-my-zsh/custom: .oh-my-zsh/custom
     ~/.p10k.zsh: .p10k.zsh
     ~/.fzf.zsh: .fzf.zsh
- 
+    ~/.doom.d: .doom.d
