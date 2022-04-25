@@ -11,6 +11,7 @@ fi
 set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
 
 # Path to your oh-my-zsh installation.
+export ZSH_CUSTOM="${HOME}/.dotfiles/.oh-my-zsh/custom/"
 export POWERLEVEL9K_INSTANT_PROMPT=off
 export ZSH="$HOME/.oh-my-zsh"
 export LANG="en_GB.UTF-8"
@@ -170,6 +171,7 @@ path=(
   "$GOPATH/bin"
   "$HOME/bin"
   "${HOME}/.local/bin"
+  "${HOME}/.emacs.d/bin"
   "${HOME}/.cargo/bin"
   "${PYENV_ROOT}/bin"
   "${PYENV_ROOT}/shims"
