@@ -58,6 +58,12 @@
         forge-alist)
 )
 
+(after! auto-dim-other-buffers
+  auto-dim-other-buffers-mode)
+
+(add-hook 'vterm-mode-hook  'with-editor-export-editor)
+(add-hook 'vterm-mode-hook  'with-editor-export-git-editor)
+
 (map!
  :ng "C-h" 'evil-window-left    ;; overrides help menu, still accessible with 'SPC h'
  :ng "C-l" 'evil-window-right

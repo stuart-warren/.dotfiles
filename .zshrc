@@ -15,15 +15,15 @@ export ZSH_CUSTOM="${HOME}/.dotfiles/.oh-my-zsh/custom/"
 export POWERLEVEL9K_INSTANT_PROMPT=off
 export ZSH="$HOME/.oh-my-zsh"
 export LANG="en_GB.UTF-8"
-export EDITOR="nvr --remote-wait"
+export EDITOR="${EDITOR:-nvim}"
 export AWS_PAGER=""
 export ZSH_DOTENV_PROMPT=true
-alias vim="nvim"
-alias vi="nvim"
+alias vim="${EDITOR}"
+alias vi="${EDITOR}"
 alias watch='watch '
 alias wiki='$EDITOR ~/Google\ Drive/My\ Drive/Wiki/index.md'
-alias gC='nvim +"call dotoo#capture#capture()"'
-alias gA='nvim +"call dotoo#agenda#agenda()"'
+# alias gC='nvim +"call dotoo#capture#capture()"'
+# alias gA='nvim +"call dotoo#agenda#agenda()"'
 alias glcurl='curl --header "Authorization: Bearer ${GITLAB_TOKEN}"'
 alias keeper='keeper --config $HOME/.keeper/config.json'
 alias notmux='tmux -f ~/.notmux.conf'
@@ -39,7 +39,7 @@ ssh-edge-device() {
     device=$( grep -E "^osp[0-9]+|^bk[0-9]+" <<< ${out} | grep -v TXT | awk '{print $1}' | rev | cut -c2- | rev | find-host )
     ssh -v ocado@${device}
 }
-alias todo="nvim ~/Google\ Drive/My\ Drive/notes/index.dotoo"
+# alias todo="nvim ~/Google\ Drive/My\ Drive/notes/index.dotoo"
 alias pane-id="tmux display -pt "${TMUX_PANE:-"%0"}" '#{pane_index}' 2>/dev/null"
 alias pom="start-pomodoro.sh"
 ip4-for-interface() {
@@ -340,6 +340,12 @@ alias pywatch="reflex -d none -R '^.mypy_cache/' -R '^.pytest_cache/' -r '\.py$'
 alias gowatch="reflex -d none -r '\.go$' --"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+    && [[ -n ${EMACS_VTERM_PATH} ]] \
+    && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
+	source ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

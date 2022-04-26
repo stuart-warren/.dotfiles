@@ -54,3 +54,4 @@
 (package! tree-sitter-langs)
 (package! command-log-mode)
 (package! beacon)
+(package! auto-dim-other-buffers)
