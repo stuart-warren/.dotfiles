@@ -16,7 +16,7 @@ git -C "${OHMYZSH_DIR}" submodule sync --quiet --recursive
 git submodule update --init --recursive "${OHMYZSH_DIR}"
 
 # rm -rf $HOME/.oh-my-zsh
-rm -rf $HOME/.zshrc.pre-oh-my-zsh* 
+rm -rf $HOME/.zshrc.pre-oh-my-zsh*
 
 which -s brew || yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 [[ -d "$HOME/.oh-my-zsh" ]] || bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

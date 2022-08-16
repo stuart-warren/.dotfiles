@@ -11,6 +11,8 @@
     ~/.config/alacritty/alacritty.yml: .config/alacritty/alacritty.yml
     # karabiner
     ~/.config/karabiner/karabiner.json: .config/karabiner/karabiner.json
+    # hammerspoon
+    ~/.hammerspoon: .hammerspoon
     # nvim
     ~/.config/nvim: .config/nvim
     ~/.config/flake8: .config/flake8
