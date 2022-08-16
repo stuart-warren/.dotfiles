@@ -44,6 +44,8 @@
 (make-directory "~/org" :parents)
 (setq org-directory "~/org/")
 (make-directory "~/org-roam" :parents)
+(make-directory "~/.config/emacs/.local/etc/lsp/lua-language-server/" :parents)
+(setq lua-lsp-dir "~/.config/emacs/.local/etc/lsp/lua-language-server/")
 
 (use-package! org-roam
   :custom
