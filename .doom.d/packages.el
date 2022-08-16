@@ -49,7 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! exwm)
+;; (package! exwm)
 (package! evil-tutor)
 (package! tree-sitter)
 (package! tree-sitter-langs)
