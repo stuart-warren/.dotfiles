@@ -12,7 +12,7 @@
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
-;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
+;; - `door variable-pitch-font' -- a non-monospace font (where applicable)
 ;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
 ;;   presentations or streaming.
 ;; - `doom-unicode-font' -- for unicode glyphs
@@ -44,14 +44,28 @@
 (make-directory "~/org" :parents)
 (setq org-directory "~/org/")
 (make-directory "~/org-roam" :parents)
-(setq org-roam-directory (file-truename "~/org-roam/"))
-(org-roam-db-autosync-mode)
+
+(use-package! org-roam
+  :custom
+  (org-roam-directory "~/org-roam")
+  (org-roam-dailies-directory "journals/")
+  (org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y_%m_%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?" :target
+      (file+head "pages/${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t))))
+  (org-roam-db-autosync-mode)
 
 (setq code-review-gitlab-host "gitlab.ocado.tech/api")
 (setq code-review-gitlab-graphql-host "gitlab.ocado.tech/api")
 (setq auth-sources
  ;; TODO work out how to make encrypted auth-source work...
-  '(macos-keychain-generic macos-keychain-internet "/Users/stuart.warren/.emacs.d/.local/etc/authinfo.gpg" "~/.authinfo.gpg" "~/.netrc"))
+  '(macos-keychain-generic macos-keychain-internet "~/.emacs.d/.local/etc/authinfo.gpg" "~/.authinfo.gpg" "~/.netrc"))
  ;;'("~/.netrc"))
 (after! forge
   (push '("gitlab.ocado.tech" "gitlab.ocado.tech/api/v4" "gitlab.ocado.tech" forge-gitlab-repository)
@@ -61,14 +75,34 @@
 (after! auto-dim-other-buffers
   auto-dim-other-buffers-mode)
 
-(add-hook 'vterm-mode-hook  'with-editor-export-editor)
-(add-hook 'vterm-mode-hook  'with-editor-export-git-editor)
+
+(defun vterm-send-esc ()
+  (interactive)
+  (vterm-send "ESC"))
+
+(defun vterm-send-colon ()
+  (interactive)
+  (vterm-send ":"))
+
+(after! vterm
+  (map!
+    :map vterm-mode-map
+    "C-c <escape>" #'vterm-send-esc
+    "C-c q"        #'vterm-quit
+    "C-c C-d"      #'vterm-send-C-d
+    "C-c :"        #'vterm-send-colon
+    "C-^"          (cmd!! #'vterm-send-key "^" t nil t)))
+
+(add-hook! 'vterm-mode-hook  'with-editor-export-git-editor)
+(advice-add 'hide-mode-line-mode :around (lambda (orig &optional args) nil))
 
 (map!
  :ng "C-h" 'evil-window-left    ;; overrides help menu, still accessible with 'SPC h'
  :ng "C-l" 'evil-window-right
  :ng "C-j" 'evil-window-down
- :ng "C-k" 'evil-window-up)
+ :ng "C-k" 'evil-window-up
+ :ng "s-_" 'evil-window-split
+ :ng "s-|" 'evil-window-vsplit)
 
 (map! :leader
   :desc "Split Window _" "_" #'evil-window-split

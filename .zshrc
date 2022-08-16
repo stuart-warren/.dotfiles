@@ -1,6 +1,7 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -9,9 +10,11 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 set -o ignoreeof # https://superuser.com/q/479600 - ignore ctrl+d
+bindkey '^q' push-line
 
 # Path to your oh-my-zsh installation.
 export ZSH_CUSTOM="${HOME}/.dotfiles/.oh-my-zsh/custom/"
+export ZVM_VI_SURROUND_BINDKEY="s-prefix"
 export POWERLEVEL9K_INSTANT_PROMPT=off
 export ZSH="$HOME/.oh-my-zsh"
 export LANG="en_GB.UTF-8"
@@ -66,6 +69,10 @@ set-aws-profile() {
 set-aws-region() {
     query=${@}
     export AWS_DEFAULT_REGION=$(osp-aws-sso select-region ${query})
+}
+find-station-id() {
+  station_id=${1}
+  aws iot search-index --index-name AWS_Things --query-string "shadow.name.location.reported.location.station_id:${station_id} OR shadow.reported.system.device.station_id:${station_id}" | jq '.things'
 }
 
 alias sap="set-aws-profile"
@@ -139,14 +146,17 @@ plugins=(
     git
     dotenv
     sudo
+    zsh-vi-mode
 )
 
+export VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+export VI_MODE_SET_CURSOR=true
 export GOPATH="$HOME"
 export GITROOT="$HOME/src"
 mkdir -p "${GITROOT}"
 export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/kind-config-kind:${GITROOT}/gitlab.ocado.tech/kubernetes/overview-docs/files/kubeconfig:${HOME}/.kube/panda-agent-config"
 
-export BREW_PREFIX="$(/usr/local/bin/brew --prefix)"
+export BREW_PREFIX="$(/usr/local/bin/brew --prefix 2>/dev/null || echo "")"
 export PYENV_ROOT="$HOME/.pyenv"
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$GITROOT
@@ -176,6 +186,7 @@ path=(
   "${PYENV_ROOT}/bin"
   "${PYENV_ROOT}/shims"
   "${GITROOT}/gitlab.ocado.tech/kamil.kafara/k8s-utils"
+  "/snap/bin"
   "/usr/local/bin"
   "/usr/bin"
   "/bin"
@@ -187,7 +198,7 @@ path=(
   "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
   "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin"
 )
-eval "$(rbenv init - zsh)"
+eval "$(rbenv init - zsh 2>/dev/null)"
 source $ZSH/oh-my-zsh.sh
 # source /usr/local/opt/asdf/asdf.sh
 
@@ -258,7 +269,6 @@ mkvenv() {
   pyenv pyright
 }
 
-[[ -e $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
 
 # source openstack-deploy config file for user with openstack-cli
 source-config() {
@@ -349,3 +359,10 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+function zvm_after_init() {
+  [[ -e $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
+}
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/stuart.warren/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)

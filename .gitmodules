@@ -6,4 +6,3 @@
 	path = .oh-my-zsh/custom/themes/powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k
 	ignore = dirty
-	

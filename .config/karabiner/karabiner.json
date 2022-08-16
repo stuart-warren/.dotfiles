@@ -15,6 +15,28 @@
                     "mouse_motion_to_scroll.speed": 100
                 },
                 "rules": [
+		    {
+			"description": "Run emacs-everywhere: right command + right option + e",
+			"manipulators": [
+			    {
+				"from": {
+				    "key_code": "d",
+				    "modifiers": {
+					"mandatory": [
+					    "right_option",
+					    "right_command"
+					]
+				    }
+				},
+				"to": [
+				    {
+					"shell_command": "/usr/local/bin/emacsclient --eval '(emacs-everywhere)'"
+				    }
+				]
+                            }
+			],
+			"type": "basic"
+                    },
                     {
                         "description": "Change caps_lock to control if pressed with other keys, to escape if pressed alone.",
                         "manipulators": [
