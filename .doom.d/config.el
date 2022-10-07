@@ -47,6 +47,8 @@
 (make-directory "~/.config/emacs/.local/etc/lsp/lua-language-server/" :parents)
 (setq lua-lsp-dir "~/.config/emacs/.local/etc/lsp/lua-language-server/")
 
+(load! "~/.hammerspoon/Spoons/editWithEmacs.spoon/hammerspoon.el")
+
 (use-package! org-roam
   :custom
   (org-roam-directory "~/org-roam")

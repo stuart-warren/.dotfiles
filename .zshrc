@@ -199,6 +199,7 @@ path=(
   "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin"
 )
 eval "$(rbenv init - zsh 2>/dev/null)"
+eval "$(pyenv init -)"
 source $ZSH/oh-my-zsh.sh
 # source /usr/local/opt/asdf/asdf.sh
 
@@ -348,6 +349,7 @@ alias fd='fd --exclude vendor --exclude node_modules --exclude Library --exclude
 
 alias pywatch="reflex -d none -R '^.mypy_cache/' -R '^.pytest_cache/' -r '\.py$' --"
 alias gowatch="reflex -d none -r '\.go$' --"
+alias rustwatch="reflex -d none -r '\.rs$' --"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
